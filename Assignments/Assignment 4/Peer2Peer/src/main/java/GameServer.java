@@ -5,6 +5,8 @@ import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
 
+import buffers.OperationProtos.Operation;
+import buffers.ResponseProtos.Response;
 /**
  * SERVER
  * This is the GameServer class that has a socket where we accept clients contacting us.
@@ -47,4 +49,9 @@ public class GameServer extends Thread{
 			e.printStackTrace();
 		}
 	}	
+
+	public Set<Sockets> getListeners()
+	{
+		return listeningSockets;
+	}
 }

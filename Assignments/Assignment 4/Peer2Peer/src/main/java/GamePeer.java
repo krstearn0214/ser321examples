@@ -2,6 +2,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import org.json.*;
+
+import buffers.OperationProtos.Operation;
+import buffers.ResponseProtos.Response;
 /**
  * This is the main class for the peer2peer program.
  * It starts a client with a username and port. Next the peer can decide who to listen to. 
@@ -12,6 +16,10 @@ import java.net.Socket;
  */
 
 public class GamePeer {
+	/**
+	 *
+	 */
+	private static final String WRITING_TO = "> Writing to +";
 	private String username;
 	private BufferedReader bufferedReader;
 	private GameServer serverThread;
@@ -33,6 +41,19 @@ public class GamePeer {
 		String username = args[0];
 		System.out.println("Hello " + username + " and welcome! Your port will be " + args[1]);
 
+		String filename = args[2];
+		Operation op = null;
+		JSONObject data = null;
+		try
+		{
+			data = readJson(filename);
+			op = generateObjectFromPB(data);
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
+		  } catch (JSONException ex) {
+			ex.printStackTrace();
+		  }
 		// starting the Server Thread, which waits for other peers to want to connect
 		GameServer serverThread = new GameServer(args[1]);
 		serverThread.start();
@@ -81,6 +102,7 @@ public class GamePeer {
 	 */
 	public void askForInput() throws Exception {
 		try {
+			/*
 			System.out.println("> You can now start chatting (exit to exit)");
 			while(true) {
 				String message = bufferedReader.readLine();
@@ -93,8 +115,18 @@ public class GamePeer {
 				}	
 			}
 			System.exit(0);
-		
-		} catch (Exception e) {
+			*/
+			System.out.println("> You can now start chatting (exit to exit)");
+			try {
+				for (Socket s : getListeners()) {
+					System.out.println(WRITING_TO);
+					op.writeDelimitedTo(s.getOutputStream());
+				 }
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		} 
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

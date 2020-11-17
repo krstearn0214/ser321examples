@@ -5,6 +5,8 @@ import java.net.Socket;
 
 import org.json.*;
 
+import buffers.OperationProtos.Operation;
+import buffers.ResponseProtos.Response;
 /**
  * Client 
  * This is the Client thread class, there is a client thread for each peer we are listening to.
