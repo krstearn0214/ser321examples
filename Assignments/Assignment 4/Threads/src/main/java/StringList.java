@@ -28,7 +28,7 @@ class StringList {
     {
         if(index > strings.size())
         {
-            return null;
+            //implement exception check
         }
         else
         {
@@ -50,14 +50,14 @@ class StringList {
     {
         if(index > strings.size())
         {
-            return null;
+            //implement exception check
         }
         else
         {
         StringBuilder flip = new StringBuilder();
         flip.append(strings.get(index));
         flip = flip.reverse();
-        strings.set(index, flip);
+        strings.set(index, flip.toString());
         }
     }
 }

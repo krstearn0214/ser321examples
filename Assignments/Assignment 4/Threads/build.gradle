@@ -1,0 +1,12 @@
+apply plugin: 'java'
+
+description = "Client Server Socket Example"
+
+task runServer(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  description = "Run Server"
+  main = 'Server'
+  // default args
+  args '8888' // port
+}
+

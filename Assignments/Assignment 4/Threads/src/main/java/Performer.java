@@ -23,16 +23,18 @@ class Performer {
                 pOut.println("Server state is now: " + state.toString());
                 break;
             case "remove":
-                state.remove(parseInt(input));
+                state.remove(Integer.parseInt(input));
+                pOut.println("Server state is now: " + state.toString());
                 break;
             case "display":
                 pOut.println("Server state is now: " + state.toString());
                 break;
             case "count":
-                state.count().toString();
+                pOut.println("Count of characters is: " + state.count().toString());
                 break;
             case "reverse":
-                state.reverse(parseInt(input));
+                state.reverse(Integer.parseInt(input));
+                pOut.println("Server state is now: " + state.toString());
                 break;
             default:
                 done = true;
@@ -54,11 +56,23 @@ class Performer {
                 String str = in.readLine();
 
                 if (str == null || str.equals("."))
+                {
                     done = true;
+                }
                 else {
                     int i = str.indexOf(' ');
-                    String request = str.substring(0, i);
-                    String data = str.substring(i);
+                    String request;
+                    String data;
+                    if (i > -1)
+                    {
+                        request = str.substring(0, i);
+                        data = str.substring(i+1);
+                    }
+                    else
+                    {
+                        request = str;
+                        data = null;
+                    }
                     getCommand(request, data, out);
                 }
             }
