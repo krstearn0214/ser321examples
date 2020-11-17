@@ -46,6 +46,9 @@ public class GamePeer {
 	 *
 	 */
 	public void updateListenToPeers() throws Exception {
+		System.out.println("> How many other players are playing?");
+		int num = Integer.parseInt(bufferedReader.readLine());
+		for(int j = 0; j < num; j++){
 		System.out.println("> Who do you want to listen to? Enter host:port");
 		String input = bufferedReader.readLine();
 		String[] setupValue = input.split(" ");
@@ -65,8 +68,8 @@ public class GamePeer {
 				}
 			}
 		}
-
-		askForInput();
+	}
+	askForInput();
 	}
 	
 	/**
