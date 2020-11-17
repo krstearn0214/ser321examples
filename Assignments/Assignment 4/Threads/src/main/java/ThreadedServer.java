@@ -1,7 +1,6 @@
 import java.net.*;
 import java.io.*;
 
-// Server class 
 public class ThreadedServer  
 { 
     public static void main(String[] args) throws IOException  
@@ -10,7 +9,7 @@ public class ThreadedServer
             System.out.println("Usage: ThreadedServer <port>");
             System.exit(1);
         }
-        ServerSocket ss = new ServerSocket(Integer.parseInt(args[0])); 
+        ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0])); 
         StringList strings = new StringList();
           
         while (true)  
@@ -18,23 +17,10 @@ public class ThreadedServer
             Socket s = null; 
             try 
             { 
-                // socket object to receive incoming client requests 
-                s = ss.accept(); 
-                  
+                s = serverSocket.accept(); 
                 System.out.println("client : " + s); 
-                  
-                // obtaining input and out streams 
-                //DataInputStream dis = new DataInputStream(s.getInputStream()); 
-                //DataOutputStream dos = new DataOutputStream(s.getOutputStream()); 
-                  
-                //System.out.println("Assigning new thread for this client"); 
-  
-                // create a new thread object 
                 Thread t = new PerformerHandler(s, strings); 
-  
-                // Invoking the start() method 
                 t.start(); 
-                  
             } 
             catch (Exception e){ 
                 s.close(); 
@@ -43,11 +29,10 @@ public class ThreadedServer
         } 
     } 
 } 
-  
-// ClientHandler class 
+
 class PerformerHandler extends Thread  
 { 
-    final Socket s; 
+    Socket s; 
     StringList strings;
   
     // Constructor 
@@ -62,14 +47,8 @@ class PerformerHandler extends Thread
     { 
         while (true)  
         { 
-            //try { 
-                Performer performer = new Performer(s, strings);
-                performer.doPerform();
-                
-                
-            //} catch (IOException e) { 
-            //    e.printStackTrace(); 
-            //} 
+            Performer performer = new Performer(s, strings);
+            performer.doPerform();
         } 
     } 
 } 

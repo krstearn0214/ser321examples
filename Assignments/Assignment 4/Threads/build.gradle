@@ -10,3 +10,19 @@ task runServer(type: JavaExec) {
   args '8888' // port
 }
 
+task runThreadedServer(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  description = "Run Threaded Server"
+  main = 'ThreadedServer'
+  // default args
+  args '8888' // port
+}
+
+task runThreadPoolServer(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  description = "Run Thread Pool Server"
+  main = 'ThreadPoolServer'
+  // default args
+  args '8888' // port
+  args '5' //connection limit	
+}
