@@ -4,8 +4,8 @@ import java.net.Socket;
 
 import org.json.*;
 
-import buffers.OperationProtos.Operation;
-import buffers.ResponseProtos.Response;
+import game.GameProtos.*;
+
 /**
  * This is the main class for the peer2peer program.
  * It starts a client with a username and port. Next the peer can decide who to listen to. 
@@ -19,7 +19,6 @@ public class GamePeer {
 	/**
 	 *
 	 */
-	private static final String WRITING_TO = "> Writing to +";
 	private String username;
 	private BufferedReader bufferedReader;
 	private GameServer serverThread;
@@ -42,18 +41,15 @@ public class GamePeer {
 		System.out.println("Hello " + username + " and welcome! Your port will be " + args[1]);
 
 		String filename = args[2];
-		Operation op = null;
-		JSONObject data = null;
-		try
-		{
-			data = readJson(filename);
-			op = generateObjectFromPB(data);
+		try {
+			
+
+			
+		} catch (Exception e) {
+			//TODO: handle exception
 		}
-		catch (IOException ex) {
-			ex.printStackTrace();
-		  } catch (JSONException ex) {
-			ex.printStackTrace();
-		  }
+		
+		
 		// starting the Server Thread, which waits for other peers to want to connect
 		GameServer serverThread = new GameServer(args[1]);
 		serverThread.start();
@@ -102,7 +98,7 @@ public class GamePeer {
 	 */
 	public void askForInput() throws Exception {
 		try {
-			/*
+			
 			System.out.println("> You can now start chatting (exit to exit)");
 			while(true) {
 				String message = bufferedReader.readLine();
@@ -111,16 +107,19 @@ public class GamePeer {
 					break;
 				} else {
 					// we are sending the message to our server thread. this one is then responsible for sending it to listening peers
-					serverThread.sendMessage("{'username': '"+ username +"','message':'" + message + "'}");
+					Question.Builder builder = Question.newBuilder()
+						.setQuestion("What is 2 + 2?")
+						.setAnswer("4");
+					System.out.println(builder.toString());
+					//serverThread.sendMessage(builder);
 				}	
 			}
 			System.exit(0);
-			*/
-			System.out.println("> You can now start chatting (exit to exit)");
+			
 			try {
-				for (Socket s : getListeners()) {
-					System.out.println(WRITING_TO);
-					op.writeDelimitedTo(s.getOutputStream());
+				for (Socket s : serverThread.getListeners()) {
+					
+					//op.writeDelimitedTo(s.getOutputStream());
 				 }
 			} catch(Exception e) {
 				e.printStackTrace();
@@ -130,4 +129,39 @@ public class GamePeer {
 			e.printStackTrace();
 		}
 	}
+/*
+	private static JSONObject readJson(String filename) throws IOException, JSONException {
+		// read json from build directory, so the getResource is needed
+		File file = new File(
+		  SockBaseClient.class.getResource("/"+filename).getFile()
+		);
+		Reader reader = new FileReader(file);
+		JSONTokener jsonTokener = new JSONTokener(reader);
+		return new JSONObject(jsonTokener);
+	  }
+
+	  private static Operation generateObjectFromPB(JSONObject data) {
+		JSONObject header = (JSONObject)data.get("header");
+		JSONObject payload = (JSONObject)data.get("payload");
+  
+		// create protobuf object
+		Operation.Builder op = Operation.newBuilder()
+		  .setVal1((String)payload.get("num1"))
+		  .setVal2((String)payload.get("num2"))
+		  .setBase((String)header.get("base"))
+		  .setOperationType(getOperationType((String)header.get("operation")))
+		  .setResponseType(getResponseType((String)header.get("response")));
+		return op.build();
+	  } 
+
+	  		Operation op = null;
+		JSONObject data = null;
+		JSONParser parser = new JSONParser();
+		try
+		{//start here
+			Object obj = parser.parse(new FileReader(filename));
+			JSONObject jsonObject = (JSONObject) obj;
+			data = readJson(filename);
+			op = generateObjectFromPB(data);
+*/
 }

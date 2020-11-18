@@ -31,7 +31,7 @@ protobuf {
 
 
 //define main class
-mainClassName = 'SimpleServer'
+//mainClassName = 'SimpleServer'
 
 task runPeer(type: JavaExec) {
   description 'Runs a peer'

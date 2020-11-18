@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package game;
+
+option java_package = "game";
+option java_outer_classname = "GameProtos";
+
+message GameState
+{
+    map<int32, bool> Question = 1; //<id, isUsed>
+    map<string, int32> standings = 2; //<name, points>
+}
+
+message Question
+{
+  string question = 1;
+  string answer = 2;
+}
+
+message Answer
+{
+  bool correct = 1;
+}
+
+message ReadyToPlay
+{
+  bool ready = 1;
+}
+
+message Winner
+{
+  string name = 1;
+}
