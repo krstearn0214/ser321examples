@@ -39,6 +39,7 @@ public class GameServer extends Thread{
 	/**
 	 * Sending the message to the OutputStream for each socket that we saved
 	 */
+	/*
 	void sendMessage(String msg) {
 		Message message; //work this and client and peer
 		try {
@@ -53,9 +54,81 @@ public class GameServer extends Thread{
 			e.printStackTrace();
 		}
 	}	
-
+	*/
 	public Set <Socket> getListeners()
 	{
 		return listeningSockets;
+	}
+	/*
+	sends a built message to all listening sockets
+	*/
+	void sendMessage(Message message)
+	{
+		try {
+			for (Socket s : listeningSockets) {
+				Question.Builder builder = Question.newBuilder()
+						.setQuestion("What is 2 + 2?")
+						.setAnswer("4");
+				message.writeTo(s.getOutputStream());
+				//out.println(message);
+		     }
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	builds a message based on sent parameters
+	*/
+	void buildM(String cmd, String contents)
+	{
+		switch (cmd)
+        {
+			case "GameState"://integrate GameState into base classes
+				//find question id#
+				//pull question string by id#
+				//GameState.Builder gs = GameState.newBuilder()
+				//	.set
+                break;
+            case "Question":
+				Question.Builder q = Question.newBuilder()
+					.setQuestion()//find question via json
+					.setAnswer();//find answer via json
+				sendMessage(q);//send to all listeners
+                break;
+			case "Answer":
+				String qAnswer;
+				boolean correct;
+				if(contents == qAnswer)
+				{
+					correct = true;
+				}
+				Answer.Builder a = Answer.newBuilder()
+					.setIsCorrect(correct);
+				sendMessage(a);
+                break;
+			case "ReadyToPlay":
+				boolean gameOn;
+				if(contents == "y")
+				{
+					gameOn = true;
+				}
+				ReadyToPlay.Builder r = ReadyToPlay.newBuilder()
+					.setReady(gameOn);
+				sendMessage(r);
+				break;
+			case "Winner":
+				boolean chickenDinner;
+				if (contents == "y")
+				{
+					chickenDinner = true;
+				}
+				Winner.Builder w = Winner.newBuilder()
+					.setWinner(chickenDinner);
+				sendMessage(w);
+                break;
+            default:
+                //done = true;
+        }
 	}
 }

@@ -19,7 +19,7 @@ message Question
 
 message Answer
 {
-  bool correct = 1;
+  bool isCorrect = 1;
 }
 
 message ReadyToPlay
