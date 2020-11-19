@@ -38,66 +38,15 @@ public class GameServer extends Thread{
 			e.printStackTrace();
 		}
 	}
-	
-	/**
-	 * Sending the message to the OutputStream for each socket that we saved
-	 */
-	/*
-	void sendMessage(String msg) {
-		Message message; //work this and client and peer
-		try {
-			for (Socket s : listeningSockets) {
-				Question.Builder builder = Question.newBuilder()
-						.setQuestion("What is 2 + 2?")
-						.setAnswer("4");
-				message.writeTo(s.getOutputStream());
-				//out.println(message);
-		     }
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}	
-	*/
-	public Set <Socket> getListeners()
-	{
-		return listeningSockets;
-	}
-	/*
-	sends a built message to all listening sockets
-	*/
-	void sendMessage(String message)
-	{
-		try {
-			for (Socket s : listeningSockets) {
-				Question.Builder builder = Question.newBuilder()
-						.setQuestion("What is 2 + 2?")
-						.setAnswer("4");
-				//message.writeTo(s.getOutputStream());
-				//out.println(message);
-		     }
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	/*
 	builds a message based on sent parameters
 	*/
 	void messageOut(Any any)
 	{
-		System.out.println(any.toString());
-		try {
-			for (Socket s : listeningSockets)
-		{
-		System.out.println(s.getOutputStream());
-		}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-
 		try {
 			for (Socket s : listeningSockets) {
-				any.writeDelimitedTo(s.getOutputStream()); //change to write
+				any.writeDelimitedTo(s.getOutputStream());
 		     }
 		} catch(Exception e) {
 			e.printStackTrace();

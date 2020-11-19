@@ -27,17 +27,12 @@ public class GameClient extends Thread {
 	public void run() {
 		while (true) {
 			try {
-				System.out.println(getSocket().getInputStream());
 				Any any = Any.parseDelimitedFrom(s.getInputStream());
-				System.out.println(any.toString());
-
 				if (any.is(Question.class))
 				{
 					Question q = any.unpack(Question.class);
 					System.out.println(q.toString());
 				}
-			    //JSONObject json = new JSONObject(bufferedReader.readLine());
-			    //System.out.println("[" + json.getString("username")+"]: " + json.getString("message"));
 			} catch (Exception e) {
 				interrupt();
 				break;
