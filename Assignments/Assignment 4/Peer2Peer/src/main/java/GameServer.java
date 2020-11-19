@@ -1,3 +1,5 @@
+//package game;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -6,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import game.GameProtos.*;
+import com.google.protobuf.Any;
 
 /**
  * SERVER
@@ -62,14 +65,14 @@ public class GameServer extends Thread{
 	/*
 	sends a built message to all listening sockets
 	*/
-	void sendMessage(Message message)
+	void sendMessage(String message)
 	{
 		try {
 			for (Socket s : listeningSockets) {
 				Question.Builder builder = Question.newBuilder()
 						.setQuestion("What is 2 + 2?")
 						.setAnswer("4");
-				message.writeTo(s.getOutputStream());
+				//message.writeTo(s.getOutputStream());
 				//out.println(message);
 		     }
 		} catch(Exception e) {
@@ -80,55 +83,24 @@ public class GameServer extends Thread{
 	/*
 	builds a message based on sent parameters
 	*/
-	void buildM(String cmd, String contents)
+	void messageOut(Any any)
 	{
-		switch (cmd)
-        {
-			case "GameState"://integrate GameState into base classes
-				//find question id#
-				//pull question string by id#
-				//GameState.Builder gs = GameState.newBuilder()
-				//	.set
-                break;
-            case "Question":
-				Question.Builder q = Question.newBuilder()
-					.setQuestion()//find question via json
-					.setAnswer();//find answer via json
-				sendMessage(q);//send to all listeners
-                break;
-			case "Answer":
-				String qAnswer;
-				boolean correct;
-				if(contents == qAnswer)
-				{
-					correct = true;
-				}
-				Answer.Builder a = Answer.newBuilder()
-					.setIsCorrect(correct);
-				sendMessage(a);
-                break;
-			case "ReadyToPlay":
-				boolean gameOn;
-				if(contents == "y")
-				{
-					gameOn = true;
-				}
-				ReadyToPlay.Builder r = ReadyToPlay.newBuilder()
-					.setReady(gameOn);
-				sendMessage(r);
-				break;
-			case "Winner":
-				boolean chickenDinner;
-				if (contents == "y")
-				{
-					chickenDinner = true;
-				}
-				Winner.Builder w = Winner.newBuilder()
-					.setWinner(chickenDinner);
-				sendMessage(w);
-                break;
-            default:
-                //done = true;
-        }
+		System.out.println(any.toString());
+		try {
+			for (Socket s : listeningSockets)
+		{
+		System.out.println(s.getOutputStream());
+		}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+
+		try {
+			for (Socket s : listeningSockets) {
+				any.writeDelimitedTo(s.getOutputStream()); //change to write
+		     }
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

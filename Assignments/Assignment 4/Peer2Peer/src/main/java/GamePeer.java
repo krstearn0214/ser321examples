@@ -1,3 +1,5 @@
+//package game;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
@@ -5,6 +7,7 @@ import java.net.Socket;
 import org.json.*;
 
 import game.GameProtos.*;
+import com.google.protobuf.Any;
 
 /**
  * This is the main class for the peer2peer program.
@@ -107,15 +110,17 @@ public class GamePeer {
 					break;
 				} else {
 					// we are sending the message to our server thread. this one is then responsible for sending it to listening peers
-					Question.Builder builder = Question.newBuilder()
+					Question q = Question.newBuilder()
 						.setQuestion("What is 2 + 2?")
-						.setAnswer("4");
-					System.out.println(builder.toString());
-					//serverThread.sendMessage(builder);
+						.setAnswer("4")
+						.build();
+					Any any = Any.pack(q);
+					System.out.println(any.toString());
+					serverThread.messageOut(any);
 				}	
 			}
 			System.exit(0);
-			
+			/*
 			try {
 				for (Socket s : serverThread.getListeners()) {
 					
@@ -124,6 +129,7 @@ public class GamePeer {
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
+			*/
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
