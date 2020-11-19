@@ -7,11 +7,6 @@ import "google/protobuf/any.proto";
 option java_package = "game";
 option java_outer_classname = "GameProtos";
 
-message ProtoWrap
-{
-  google.protobuf.Any wrap = 1; //wrapper to any pack
-}
-
 message GameState
 {
     map<int32, bool> Question = 1; //<id, isUsed>

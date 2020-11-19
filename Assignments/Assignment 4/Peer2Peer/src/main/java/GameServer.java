@@ -52,4 +52,9 @@ public class GameServer extends Thread{
 			e.printStackTrace();
 		}
 	}
+
+	public Set<Socket> getSockets()
+	{
+		return listeningSockets;
+	}
 }

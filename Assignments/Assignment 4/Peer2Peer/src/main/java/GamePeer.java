@@ -4,10 +4,13 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import org.json.*;
-
 import game.GameProtos.*;
 import com.google.protobuf.Any;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+ 
+import java.io.FileReader;
 
 /**
  * This is the main class for the peer2peer program.
@@ -25,11 +28,13 @@ public class GamePeer {
 	private String username;
 	private BufferedReader bufferedReader;
 	private GameServer serverThread;
+	private JSONObject qData;
 	
-	public GamePeer(BufferedReader bufReader, String username, GameServer serverThread){
+	public GamePeer(BufferedReader bufReader, String username, GameServer serverThread, JSONObject qData){
 		this.username = username;
 		this.bufferedReader = bufReader;
 		this.serverThread = serverThread;
+		this.qData = qData;
 	}
 	/**
 	 * Main method saying hi and also starting the Server thread where other peers can subscribe to listen
@@ -42,17 +47,19 @@ public class GamePeer {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 		String username = args[0];
 		System.out.println("Hello " + username + " and welcome! Your port will be " + args[1]);
-
+		JSONParser jp = new JSONParser();
 		String filename = args[2];
+		JSONObject jOb = null;
 		try {
-
+			Object obj = jp.parse(new FileReader(filename));
+			jOb = (JSONObject) obj;
 		} catch (Exception e) {
 		}
-		
+		//System.out.println(jOb.toString());
 		// starting the Server Thread, which waits for other peers to want to connect
 		GameServer serverThread = new GameServer(args[1]);
 		serverThread.start();
-		GamePeer peer = new GamePeer(bufferedReader, args[0], serverThread);
+		GamePeer peer = new GamePeer(bufferedReader, args[0], serverThread, jOb);
 		peer.updateListenToPeers();
 	}
 	
@@ -85,7 +92,7 @@ public class GamePeer {
 			}
 		}
 	}
-	askForInput();
+	gamePlay();
 	}
 	
 	/**
@@ -95,23 +102,48 @@ public class GamePeer {
 	 * @param username name of this peer
 	 * @param serverThread server thread that is waiting for peers to sign up
 	 */
-	public void askForInput() throws Exception {
+	public void gamePlay() throws Exception {
+		Player p = new Player(username);
 		try {
-			
-			System.out.println("> You can now start chatting (exit to exit)");
+			System.out.println("> Choosing inital host...");
+			for(Socket s : serverThread.getSockets())
+			{
+				if(Integer.valueOf(username) > 5) //change to namegrabing method
+				{
+					p.nowHost(true);
+				}
+				else
+				{
+					p.nowHost(false);
+				}
+			}
+			System.out.println("> Play will now begin! (exit to exit)");
 			while(true) {
-				String message = bufferedReader.readLine();
-				if (message.equals("exit")) {
-					System.out.println("bye, see you next time");
-					break;
-				} else {
-					// we are sending the message to our server thread. this one is then responsible for sending it to listening peers
+				if(p.getHost = true)
+				{
 					Question q = Question.newBuilder()
 						.setQuestion("What is 2 + 2?")
 						.setAnswer("4")
 						.build();
 					Any any = Any.pack(q);
-					System.out.println(any.toString());
+					serverThread.messageOut(any);
+				}
+				else
+				{
+					//code to listen
+				}
+				String message = bufferedReader.readLine();
+				if (message.equals("exit")) {
+					System.out.println("bye, see you next time");
+					break;
+				} 
+				else 
+				{
+					Question q = Question.newBuilder()
+						.setQuestion("What is 2 + 2?")
+						.setAnswer("4")
+						.build();
+					Any any = Any.pack(q);
 					serverThread.messageOut(any);
 				}	
 			}
