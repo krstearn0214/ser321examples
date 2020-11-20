@@ -3,12 +3,14 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Random;
 
 import game.GameProtos.*;
 import com.google.protobuf.Any;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.JSONArray;
  
 import java.io.FileReader;
 
@@ -25,16 +27,20 @@ public class GamePeer {
 	/**
 	 *
 	 */
-	private String username;
+	private Player p;
 	private BufferedReader bufferedReader;
 	private GameServer serverThread;
-	private JSONObject qData;
+	private JSONArray qData;
+	private Boolean[] isUsed;
+	private String curAnswer;
 	
-	public GamePeer(BufferedReader bufReader, String username, GameServer serverThread, JSONObject qData){
-		this.username = username;
+	public GamePeer(BufferedReader bufReader, Player p, GameServer serverThread, JSONArray qData){
+		this.p = p;
 		this.bufferedReader = bufReader;
 		this.serverThread = serverThread;
 		this.qData = qData;
+		Boolean[] isUsed = new Boolean[13];
+		curAnswer = null;
 	}
 	/**
 	 * Main method saying hi and also starting the Server thread where other peers can subscribe to listen
@@ -46,20 +52,23 @@ public class GamePeer {
 
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 		String username = args[0];
+		Player p = new Player(username);
 		System.out.println("Hello " + username + " and welcome! Your port will be " + args[1]);
 		JSONParser jp = new JSONParser();
 		String filename = args[2];
-		JSONObject jOb = null;
+		Object obj = null;
 		try {
-			Object obj = jp.parse(new FileReader(filename));
-			jOb = (JSONObject) obj;
+			obj = jp.parse(new FileReader(filename));
 		} catch (Exception e) {
 		}
-		//System.out.println(jOb.toString());
-		// starting the Server Thread, which waits for other peers to want to connect
+		JSONArray array = (JSONArray) obj;
+		JSONObject jQ = (JSONObject)array.get(1);
+		//System.out.println(jQ.toString());
+		//System.out.println(jQ.get("id"));
+
 		GameServer serverThread = new GameServer(args[1]);
 		serverThread.start();
-		GamePeer peer = new GamePeer(bufferedReader, args[0], serverThread, jOb);
+		GamePeer peer = new GamePeer(bufferedReader, p, serverThread, array);
 		peer.updateListenToPeers();
 	}
 	
@@ -92,7 +101,7 @@ public class GamePeer {
 			}
 		}
 	}
-	gamePlay();
+	gameStart();
 	}
 	
 	/**
@@ -102,56 +111,186 @@ public class GamePeer {
 	 * @param username name of this peer
 	 * @param serverThread server thread that is waiting for peers to sign up
 	 */
-	public void gamePlay() throws Exception {
-		Player p = new Player(username);
+	public void gameStart() throws Exception {
 		try {
 			System.out.println("> Choosing inital host...");
+			int myVal = 0;
+			for(int i = 0; i < p.getName().length(); i++)
+			{
+				myVal += (int) p.getName().charAt(i);
+			}
 			for(Socket s : serverThread.getSockets())
 			{
-				if(Integer.valueOf(username) > 5) //change to namegrabing method
-				{
-					p.nowHost(true);
+				
+				if(myVal > 97) //a=97 for testing confirmed host
+				{//to be changed to username-grabbing method
+					getPlayer().nowHost(true);
 				}
 				else
 				{
-					p.nowHost(false);
+					getPlayer().nowHost(false);
 				}
 			}
-			System.out.println("> Play will now begin! (exit to exit)");
 			while(true) {
-				if(p.getHost = true)
-				{
-					Question q = Question.newBuilder()
-						.setQuestion("What is 2 + 2?")
-						.setAnswer("4")
-						.build();
-					Any any = Any.pack(q);
-					serverThread.messageOut(any);
-				}
-				else
-				{
-					//code to listen
-				}
-				String message = bufferedReader.readLine();
-				if (message.equals("exit")) {
-					System.out.println("bye, see you next time");
-					break;
-				} 
-				else 
-				{
-					Question q = Question.newBuilder()
-						.setQuestion("What is 2 + 2?")
-						.setAnswer("4")
-						.build();
-					Any any = Any.pack(q);
-					serverThread.messageOut(any);
-				}	
+				gameOn();
 			}
-			System.exit(0);
-
+			//System.exit(0);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+	public void gameOn() throws Exception
+	{
+		try{
+			if(p.getName() == "joe")
+			{
+				p.isHost(true);
+				askQuestion();
+			}
+			else
+			{
+				getQuestion();
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public void askQuestion() throws Exception
+	{
+		System.out.println("> Asking question...");
+		int id = randQuest();
+		try{
+			JSONObject jsQuest = (JSONObject)array.get(id);
+			Question q = Question.newBuilder()
+						.setQuestion(jsQuest.get("question"))
+						.setAnswer(jsQuest.get("answer"))
+						.setType(jsQuest.get("type"))
+						.build();
+					Any any = Any.pack(q);
+					serverThread.messageOut(any);
+		//String message = bufferedReader.readLine();
+		//if (message.equals("exit")) System.exit(0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		while(p.getHost = true)
+		{
+
+		}
+		getQuestion();
+	}
+
+	public void getQuestion() throws Exception
+	{
+		System.out.println("> Getting question...");
+		try{
+
+		String message = bufferedReader.readLine();
+		if (message.equals("exit")) {System.exit(0);}
+		else{
+			if(message.equals(serverThread.getCurAns()))
+			{
+				p.score();
+				if(p.getPoints() == 5)
+				{
+					Winner w = Winner.newBuilder()
+						.setName(p.getName())
+						.build();
+					Any any = Any.pack(w);
+					serverThread.messageOut(any);
+				}
+				else{
+				
+				Answer a = Answer.newBuilder()
+					.setIsCorrect(true)
+					.build();
+				Any any = Any.pack(a);
+				serverThread.messageOut(any);
+				p.nowHost(true);
+				}
+
+			}
+			else{
+				Answer a = Answer.newBuilder()
+					.setIsCorrect(false)
+					.build();
+				Any any = Any.pack(a);
+				serverThread.messageOut(any);
+			}
+		}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public int randQuest()
+	{
+		Random rand = new Random();
+		int id;
+		boolean useable = false;
+		while(useable = false)
+		{
+			id = rand.nextInt(12) + 1;
+			if(isUsed[id] = false){
+				useable = true;
+			}
+		}
+		return id;
+	}
+
+	public Player getPlayer()
+	{
+		return p;
+	}
+
+	public void setAnswer(String ans)
+	{
+		curAnswer = ans;
+	}
+
+	public void notHost()
+	{
+		getPlayer().nowHost(false);
+	}
+	/*
+					if(getPlayer().getHost() == true)
+				{
+					System.out.println("> Waiting on player answers...");
+					Question q = Question.newBuilder()
+						.setQuestion("What is 2 + 2?")
+						.setAnswer("4")
+						.build();
+					Any any = Any.pack(q);
+					serverThread.messageOut(any);
+				}
+				else
+				{
+					System.out.println("> Answer the following question: ");
+					String message = bufferedReader.readLine();
+					if (message.equals("exit")) {
+						System.out.println("bye, see you next time");
+					break;
+					} 
+					else
+					{
+						boolean cor = false;
+						if(message.equals("4"))
+						{
+							cor = true;
+						}
+						Answer a = Answer.newBuilder()
+							.setIsCorrect(cor)
+							.build();
+						Any any = Any.pack(a);
+						serverThread.messageOut(any);
+					}
+				}
+	*/
 }

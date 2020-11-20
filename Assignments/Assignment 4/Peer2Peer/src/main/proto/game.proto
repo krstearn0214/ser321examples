@@ -17,6 +17,7 @@ message Question
 {
   string question = 1;
   string answer = 2;
+  string type = 3;
 }
 
 message Answer

@@ -20,9 +20,11 @@ import com.google.protobuf.Any;
 public class GameServer extends Thread{
 	private ServerSocket serverSocket;
 	private Set<Socket> listeningSockets = new HashSet<Socket>();
+	private String curAns;
 	
 	public GameServer(String portNum) throws IOException {
 		serverSocket = new ServerSocket(Integer.valueOf(portNum));
+		curAns = null;
 	}
 	
 	/**
@@ -44,6 +46,12 @@ public class GameServer extends Thread{
 	*/
 	void messageOut(Any any)
 	{
+		if (any.is(Question.class))
+				{
+					Question q = any.unpack(Question.class);
+					curAns = q.getAnswer();
+					//System.out.println(q.getQuestion().toString());
+				}
 		try {
 			for (Socket s : listeningSockets) {
 				any.writeDelimitedTo(s.getOutputStream());
@@ -53,8 +61,8 @@ public class GameServer extends Thread{
 		}
 	}
 
-	public Set<Socket> getSockets()
+	public String getCurAns()
 	{
-		return listeningSockets;
+		return curAns;
 	}
 }

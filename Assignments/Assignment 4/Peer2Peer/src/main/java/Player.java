@@ -15,4 +15,24 @@ public class Player
     {
         isHost = h;
     }
+
+    public boolean getHost()
+    {
+        return isHost;
+    }
+
+    public String getName()
+    {
+        return username;
+    }
+
+    public void score()
+    {
+        points++;
+    }
+
+    public int getPoints()
+    {
+        return points;
+    }
 }

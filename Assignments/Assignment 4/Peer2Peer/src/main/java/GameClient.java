@@ -17,10 +17,14 @@ import com.google.protobuf.Any;
 public class GameClient extends Thread {
 	private BufferedReader bufferedReader;
 	private Socket s;
+	private String curAns;
+	private GamePeer peer;
 	
-	public GameClient(Socket socket) throws IOException {
+	public GameClient(Socket socket, GamePeer peer) throws IOException {
 		bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		s = socket;
+		curAns = null;
+		this.peer = peer;
 	}
 	public void run() {
 		while (true) {
@@ -29,7 +33,27 @@ public class GameClient extends Thread {
 				if (any.is(Question.class))
 				{
 					Question q = any.unpack(Question.class);
-					System.out.println(q.toString());
+					curAns = q.getAnswer();
+					System.out.println(q.getQuestion().toString());
+				}
+				else if (any.is(Answer.class))
+				{
+					Answer a = any.unpack(Answer.class);
+					if(a.getIsCorrect() == true)
+					{
+						System.out.println("> Answer correct!");
+						peer.notHost();
+					}
+					else
+					{
+						System.out.println("> Answer incorrect!");
+					}
+				}
+				else if (any.is(Winner.class))
+				{
+					Winner w = any.unpack(Winner.class);
+					
+					System.out.println("> " + w.getName() + "has won the game!");
 				}
 			} catch (Exception e) {
 				interrupt();
@@ -40,5 +64,16 @@ public class GameClient extends Thread {
 	public Socket getSocket()
 	{
 		return s;
+	}
+
+	public boolean isCorrect(String answer)
+	{
+		if (answer = curAns)
+		{
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 }
