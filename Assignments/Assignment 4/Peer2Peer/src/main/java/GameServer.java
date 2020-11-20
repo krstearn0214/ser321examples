@@ -46,13 +46,14 @@ public class GameServer extends Thread{
 	*/
 	void messageOut(Any any)
 	{
+		try {
 		if (any.is(Question.class))
 				{
 					Question q = any.unpack(Question.class);
 					curAns = q.getAnswer();
-					//System.out.println(q.getQuestion().toString());
+					
+					System.out.println(curAns);
 				}
-		try {
 			for (Socket s : listeningSockets) {
 				any.writeDelimitedTo(s.getOutputStream());
 		     }

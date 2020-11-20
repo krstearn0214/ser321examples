@@ -7,12 +7,6 @@ import "google/protobuf/any.proto";
 option java_package = "game";
 option java_outer_classname = "GameProtos";
 
-message GameState
-{
-    map<int32, bool> Question = 1; //<id, isUsed>
-    map<string, int32> standings = 2; //<name, points>
-}
-
 message Question
 {
   string question = 1;

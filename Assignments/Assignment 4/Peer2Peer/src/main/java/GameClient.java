@@ -66,14 +66,4 @@ public class GameClient extends Thread {
 		return s;
 	}
 
-	public boolean isCorrect(String answer)
-	{
-		if (answer = curAns)
-		{
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
 }

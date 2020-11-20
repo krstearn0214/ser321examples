@@ -69,7 +69,7 @@ public class GamePeer {
 		GameServer serverThread = new GameServer(args[1]);
 		serverThread.start();
 		GamePeer peer = new GamePeer(bufferedReader, p, serverThread, array);
-		peer.updateListenToPeers();
+		peer.updateListenToPeers(peer);
 	}
 	
 	/**
@@ -77,7 +77,7 @@ public class GamePeer {
 	 * Per default we listen to no one
 	 *
 	 */
-	public void updateListenToPeers() throws Exception {
+	public void updateListenToPeers(GamePeer peer) throws Exception {
 		System.out.println("> How many other players are playing?");
 		int num = Integer.parseInt(bufferedReader.readLine());
 		for(int j = 0; j < num; j++){
@@ -89,7 +89,7 @@ public class GamePeer {
 			Socket socket = null;
 			try {
 				socket = new Socket(address[0], Integer.valueOf(address[1]));
-				new GameClient(socket).start();
+				new GameClient(socket, peer).start();
 			} catch (Exception c) {
 				if (socket != null) {
 					socket.close();
@@ -114,13 +114,12 @@ public class GamePeer {
 	public void gameStart() throws Exception {
 		try {
 			System.out.println("> Choosing inital host...");
+			/*
 			int myVal = 0;
 			for(int i = 0; i < p.getName().length(); i++)
 			{
 				myVal += (int) p.getName().charAt(i);
 			}
-			for(Socket s : serverThread.getSockets())
-			{
 				
 				if(myVal > 97) //a=97 for testing confirmed host
 				{//to be changed to username-grabbing method
@@ -130,6 +129,13 @@ public class GamePeer {
 				{
 					getPlayer().nowHost(false);
 				}
+			*/
+			if (p.getName().equals("joe"))
+			{
+				p.nowHost(true);
+			}
+			else{
+				p.nowHost(false);
 			}
 			while(true) {
 				gameOn();
@@ -143,10 +149,10 @@ public class GamePeer {
 
 	public void gameOn() throws Exception
 	{
+		System.out.println(p.getName());
 		try{
-			if(p.getName() == "joe")
+			if(p.getHost() == true)
 			{
-				p.isHost(true);
 				askQuestion();
 			}
 			else
@@ -164,11 +170,11 @@ public class GamePeer {
 		System.out.println("> Asking question...");
 		int id = randQuest();
 		try{
-			JSONObject jsQuest = (JSONObject)array.get(id);
+			JSONObject jsQuest = (JSONObject)getArray().get(id);
 			Question q = Question.newBuilder()
-						.setQuestion(jsQuest.get("question"))
-						.setAnswer(jsQuest.get("answer"))
-						.setType(jsQuest.get("type"))
+						.setQuestion(jsQuest.get("question").toString())
+						.setAnswer(jsQuest.get("answer").toString())
+						.setType(jsQuest.get("type").toString())
 						.build();
 					Any any = Any.pack(q);
 					serverThread.messageOut(any);
@@ -178,7 +184,7 @@ public class GamePeer {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		while(p.getHost = true)
+		while(p.getHost() == true)
 		{
 
 		}
@@ -233,7 +239,7 @@ public class GamePeer {
 	public int randQuest()
 	{
 		Random rand = new Random();
-		int id;
+		int id = 0;
 		boolean useable = false;
 		while(useable = false)
 		{
@@ -258,6 +264,11 @@ public class GamePeer {
 	public void notHost()
 	{
 		getPlayer().nowHost(false);
+	}
+
+	public JSONArray getArray()
+	{
+		return qData;
 	}
 	/*
 					if(getPlayer().getHost() == true)
