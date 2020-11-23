@@ -53,7 +53,7 @@ public class MergeSort {
   
   public static void Test(int port) {
 	Random r = new Random();
-	int goBig = 1000;
+	int goBig = 5000;
 	int[] a = new int[goBig];
 	for(int i = 0; i < goBig; i++)
 	{//10000 piece array
@@ -103,13 +103,13 @@ public class MergeSort {
     // make sure we didn't hang
     System.out.println("started");
     // One Sorter
-    //Test(ports.get(3));
+    Test(ports.get(3));
 
     // One branch / Two Sorters
     //Test(ports.get(2));
 
     // Three Branch / Four Sorters
-    Test(ports.get(0));
+    //Test(ports.get(0));
 	System.exit(0);
   }
 }

@@ -1,4 +1,4 @@
-**Task 1**
+﻿**Task 1**
 
 1.  
 MergeSort.java, which contains the main function, sets up 7 nodes including itself.
@@ -31,4 +31,11 @@ This distributed system has the advantage of using multiple nodes to do it's cal
 One sorter - Elapsed time 1511 MicroSeconds, 787255 bytes networked
 One branch, two sorter - 3406 MicroSeconds, 3071651
 3 branch 4 sort - 3122 MS, 3072650
+
+5000 piece array
+
+0-1 4545  3891827
+1-2 11707 15317947
+3-4 22952 50282311
+
 
