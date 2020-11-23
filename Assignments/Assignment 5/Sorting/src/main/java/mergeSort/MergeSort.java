@@ -52,7 +52,15 @@ public class MergeSort {
   }
   
   public static void Test(int port) {
-    int[] a = { 5, 1, 6, 2, 3, 4, 10,634,34,23,653, 23,2 ,6 };
+	Random r = new Random();
+	int goBig = 1000;
+	int[] a = new int[goBig];
+	for(int i = 0; i < goBig; i++)
+	{//10000 piece array
+	a[i] = r.nextInt(goBig);
+	}//of 0-9999 int for longer sort times
+	long sT = System.currentTimeMillis();
+    //int[] a = { 5, 1, 6, 2, 3, 4, 10,634,34,23,653, 23,2 ,6 };
     JSONObject response = NetworkUtils.send(port, init(a));
     
     System.out.println(response);
@@ -63,12 +71,15 @@ public class MergeSort {
       response = NetworkUtils.send(port, remove());
 
       if (response.getBoolean("hasValue")) {
-        System.out.println(response);;
- 
+        //System.out.println(response);;
+ 	//don't need 10000 lines
       } else{
         break;
       }
     }
+	long eT = System.currentTimeMillis();
+	long timed = eT - sT;
+	System.out.println("Elapsed time was : " + timed);
   }
 
   public static void main(String[] args) {
@@ -92,13 +103,13 @@ public class MergeSort {
     // make sure we didn't hang
     System.out.println("started");
     // One Sorter
-    Test(ports.get(3));
+    //Test(ports.get(3));
 
     // One branch / Two Sorters
-    Test(ports.get(2));
+    //Test(ports.get(2));
 
     // Three Branch / Four Sorters
     Test(ports.get(0));
-
+	System.exit(0);
   }
 }
