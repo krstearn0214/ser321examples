@@ -56,9 +56,9 @@ public class MergeSort {
 	int goBig = 5000;
 	int[] a = new int[goBig];
 	for(int i = 0; i < goBig; i++)
-	{//10000 piece array
+	{//50000 piece array
 	a[i] = r.nextInt(goBig);
-	}//of 0-9999 int for longer sort times
+	}//of 0-4999 int for longer sort times
 	long sT = System.currentTimeMillis();
     //int[] a = { 5, 1, 6, 2, 3, 4, 10,634,34,23,653, 23,2 ,6 };
     JSONObject response = NetworkUtils.send(port, init(a));
@@ -72,7 +72,7 @@ public class MergeSort {
 
       if (response.getBoolean("hasValue")) {
         //System.out.println(response);;
- 	//don't need 10000 lines
+ 	//don't need 5000 lines
       } else{
         break;
       }
