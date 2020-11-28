@@ -104,6 +104,18 @@ public class MergeSort {
       hostPort = Integer.parseInt(args[0]);
       new Thread(new Sorter(hostPort)).start();
       System.out.println("making sorter");
+      System.out.println("enter anything but y when ready to exit");
+      String ready = null;
+    try{
+    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+    ready = bufferedReader.readLine(); }
+    catch(Exception e){
+
+    }
+    if (ready != "y")
+    {
+      System.exit(0);
+    }
     }
     
     if(args.length == 5)
@@ -115,10 +127,10 @@ public class MergeSort {
       c2port = Integer.parseInt(args[3]);
       bPort = Integer.parseInt(args[4]);
       new Thread(new Branch(bPort, c1port, c2port, c1host, c2host)).start();
-      // Above is not suitable for hosting - Node needs to be refined to Socket, not ServerSocket.
+      
     }
-    /*
-    System.out.println("enter y when ready");
+    System.out.println("here we go");
+    Test(bPort);
     String ready = null;
     try{
     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
@@ -130,9 +142,9 @@ public class MergeSort {
     {
       System.exit(0);
     }
-    */
-    System.out.println("here we go");
-    Test(bPort);
+    
+    
+    /*
     ArrayList<Integer> ports = new ArrayList<>(Arrays.asList(8000, 8001, 8002, 8003, 8004, 8005, 8006));
 
     // setup each of the nodes
@@ -140,7 +152,7 @@ public class MergeSort {
     //   1     2
     // 3   4 5   6
 
-    /*
+    
     new Thread(new Branch(ports.get(0), ports.get(1), ports.get(2))).start();
     
     new Thread(new Branch(ports.get(1), ports.get(3), ports.get(4))).start();
@@ -150,7 +162,7 @@ public class MergeSort {
     new Thread(new Branch(ports.get(2), ports.get(5), ports.get(6))).start();
     new Thread(new Sorter(ports.get(5))).start();
     new Thread(new Sorter(ports.get(6))).start();
-    */
+    
     // make sure we didn't hang
     System.out.println("started");
     // One Sorter
@@ -161,6 +173,7 @@ public class MergeSort {
 
     // Three Branch / Four Sorters
     //Test(ports.get(0));
-	//System.exit(0);
+    //System.exit(0);
+    */
   }
 }

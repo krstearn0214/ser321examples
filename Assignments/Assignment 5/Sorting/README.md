@@ -58,3 +58,7 @@ The cause of these rapid increases in time and data is twofold.  First, the sort
 1.  Both gradle tasks are included within the build file.
 
 2.  Attempted to connect distribution - was not able to figure out that ServerSocket within Node.java needed to be changed to Socket to accomidate nonlocal hosts.  Code submitted as-is.
+EDIT:
+Gradle tasks:
+gradle runBranch --args="localhost 8888 localhost 8889 8000"
+gradle runSorter --args="8888"

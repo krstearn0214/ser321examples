@@ -57,7 +57,7 @@ public abstract class Node implements Runnable {
         try {
           // listen for connection
           conn = socket.accept();
-
+          
           // read in a message
           JSONObject root = NetworkUtils.read(conn);
 
