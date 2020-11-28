@@ -16,6 +16,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+import java.net.InetAddress;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -90,11 +91,15 @@ public class MergeSort {
     String c2host = null;
     int c2port = 0;
     int bPort = 0;
-    
+    InetAddress sortIp = null;
+    try{
+      sortIp = InetAddress.getLocalHost();
+    }catch(Exception e){
+    }
     if(args.length == 1)
     {
       hostPort = Integer.parseInt(args[0]);
-      new Sorter(hostPort);
+      new Sorter(sortIp.getHostAddress(), hostPort);
       System.out.println("making sorter");
     }
     
@@ -107,7 +112,7 @@ public class MergeSort {
       c2port = Integer.parseInt(args[3]);
       bPort = Integer.parseInt(args[4]);
       new Thread(new Branch(bPort, c1port, c2port, c1host)).start();
-      // One branch/ Two Sorters via network
+      // Above is not suitable for hosting - Node needs to be refined to Socket, not ServerSocket.
     }
     System.out.println("enter y when ready");
     String ready = null;

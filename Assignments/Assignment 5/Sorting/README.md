@@ -1,4 +1,6 @@
-﻿**Task 1**
+﻿Assignment 5 - Version 2
+
+**Task 1**
 
 1.  
 MergeSort.java, which contains the main function, sets up 7 nodes including itself.
@@ -50,3 +52,9 @@ The results indicate that the distribution hinders, instead of helps, the sortin
 The cause of these rapid increases in time and data is twofold.  First, the sorting algorithm is not memory efficient.  Second, the method of distribution requires a large amount of small communications, as opposed to a smaller amount of large ones.  These communications all require synchronization, forcing each to run at the speed only of the slowest fellow node.
 
 4. The amount of packets and number of bytes being put through the network increase exponentially with the number of branches and nodes utilized.  There are a couple of ways to decrease this traffic.  First, methods can be changed to include less parameters (and potentially use an alternative to JSON objects).  Alternatively, if data were to be sent and received in a large block, it would reduce the number of bytes being utilized due to not having to pass methods around.  
+
+**Task 2**
+
+1.  Both gradle tasks are included within the build file.
+
+2.  Attempted to connect distribution - was not able to figure out that ServerSocket within Node.java needed to be changed to Socket to accomidate nonlocal hosts.  Code submitted as-is.
