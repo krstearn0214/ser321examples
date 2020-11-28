@@ -53,7 +53,12 @@ public class MergeSort {
   }
   
   public static void Test(int port) {
-    String host = "localhost";
+    InetAddress branchIp = null;
+    try{
+      branchIp = InetAddress.getLocalHost();
+    }catch(Exception e){
+    }
+    String host = branchIp.getHostAddress();
 	Random r = new Random();
 	int goBig = 5000;
 	int[] a = new int[goBig];
