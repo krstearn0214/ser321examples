@@ -59,6 +59,7 @@ public class MergeSort {
     }catch(Exception e){
     }
     String host = branchIp.getHostAddress();
+    System.out.println(host);
 	Random r = new Random();
 	int goBig = 5000;
 	int[] a = new int[goBig];
