@@ -52,7 +52,8 @@ public class MergeSort {
     return req;
   }
   
-  public static void Test(String host, int port) {
+  public static void Test(int port) {
+    String host = "localhost";
 	Random r = new Random();
 	int goBig = 5000;
 	int[] a = new int[goBig];
@@ -91,15 +92,17 @@ public class MergeSort {
     String c2host = null;
     int c2port = 0;
     int bPort = 0;
+    /*
     InetAddress sortIp = null;
     try{
       sortIp = InetAddress.getLocalHost();
     }catch(Exception e){
     }
+    */
     if(args.length == 1)
     {
       hostPort = Integer.parseInt(args[0]);
-      new Sorter(sortIp.getHostAddress(), hostPort);
+      new Thread(new Sorter(hostPort)).start();
       System.out.println("making sorter");
     }
     
@@ -111,9 +114,10 @@ public class MergeSort {
       c2host = args[2];
       c2port = Integer.parseInt(args[3]);
       bPort = Integer.parseInt(args[4]);
-      new Thread(new Branch(bPort, c1port, c2port, c1host)).start();
+      new Thread(new Branch(bPort, c1port, c2port, c1host, c2host)).start();
       // Above is not suitable for hosting - Node needs to be refined to Socket, not ServerSocket.
     }
+    /*
     System.out.println("enter y when ready");
     String ready = null;
     try{
@@ -126,8 +130,9 @@ public class MergeSort {
     {
       System.exit(0);
     }
+    */
     System.out.println("here we go");
-    Test(c1host, bPort);
+    Test(bPort);
     ArrayList<Integer> ports = new ArrayList<>(Arrays.asList(8000, 8001, 8002, 8003, 8004, 8005, 8006));
 
     // setup each of the nodes

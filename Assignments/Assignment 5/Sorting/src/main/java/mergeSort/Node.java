@@ -10,18 +10,18 @@ import org.json.JSONObject;
 
 public abstract class Node implements Runnable {
   private int _port;
-  private String _host;
+  //private String _host;
 
   public Node(int port) {
     _port = port;
-    _host = null;
+    //_host = null;
   }
-
+  /*
   public Node(String host, int port){
     _host = host;
     _port = port;
   }
-
+  */
   public abstract JSONObject init(JSONObject object);
 
   public abstract JSONObject peek(JSONObject object);
@@ -32,7 +32,7 @@ public abstract class Node implements Runnable {
 
   @Override
   public void run() {
-    ServerSocket socket = null;
+    /*
     if(_host != null){
       try{
     {
@@ -46,10 +46,12 @@ public abstract class Node implements Runnable {
     }
     else{
     // separated so the finally can clean up the connection
-    
+    */
+    ServerSocket socket = null;
     try {
       // create the listening socket
       socket = new ServerSocket(_port);
+      System.out.println(socket.toString());
       while (true) { // handle connections indefinitely
         Socket conn = null;
         try {
@@ -103,5 +105,5 @@ public abstract class Node implements Runnable {
           e.printStackTrace();
         }
     }
-  }}
+  }
 }

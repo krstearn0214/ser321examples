@@ -10,7 +10,7 @@ public class Branch extends Node {
   private String _hostR;
 
   public Branch(int port, int left, int right, String hostL, String hostR) {
-    super(host, port);
+    super(port);
     _leftPort = left;
     _rightPort = right;
     _hostL = hostL;
@@ -30,13 +30,13 @@ public class Branch extends Node {
     }
 
     object.put("data", left);
-    JSONObject response1 = NetworkUtils.send(_leftPort, object);
+    JSONObject response1 = NetworkUtils.send(_hostL, _leftPort, object);
     if (response1.has("error")) {
       return response1;
     }
 
     object.put("data", right);
-    JSONObject response2 = NetworkUtils.send(_rightPort, object);
+    JSONObject response2 = NetworkUtils.send(_hostR, _rightPort, object);
     if (response2.has("error")) {
       return response2;
     }
@@ -46,12 +46,12 @@ public class Branch extends Node {
   }
 
   public JSONObject peek(JSONObject object) {
-    JSONObject response1 = NetworkUtils.send(_leftPort, object);
+    JSONObject response1 = NetworkUtils.send(_hostL, _leftPort, object);
     if (response1.has("error")) {
       return response1;
     }
 
-    JSONObject response2 = NetworkUtils.send(_rightPort, object);
+    JSONObject response2 = NetworkUtils.send(_hostR, _rightPort, object);
     if (response2.has("error")) {
       return response2;
     }
@@ -69,25 +69,25 @@ public class Branch extends Node {
 
   public JSONObject remove(JSONObject object) {
     object.put("method", "peek");
-    JSONObject response1 = NetworkUtils.send(_leftPort, object);
+    JSONObject response1 = NetworkUtils.send(_hostL, _leftPort, object);
     if (response1.has("error")) {
       return response1;
     }
 
-    JSONObject response2 = NetworkUtils.send(_rightPort, object);
+    JSONObject response2 = NetworkUtils.send(_hostR, _rightPort, object);
     if (response2.has("error")) {
       return response2;
     }
 
     object.put("method", "remove");
     if (!response1.getBoolean("hasValue")) {
-      return NetworkUtils.send(_rightPort, object);
+      return NetworkUtils.send(_hostR, _rightPort, object);
     } else if (!response2.getBoolean("hasValue")) {
-      return NetworkUtils.send(_leftPort, object);
+      return NetworkUtils.send(_hostL, _leftPort, object);
     } else if (response1.getInt("value") < response2.getInt("value")) {
-      return NetworkUtils.send(_leftPort, object);
+      return NetworkUtils.send(_hostL, _leftPort, object);
     } else {
-      return NetworkUtils.send(_rightPort, object);
+      return NetworkUtils.send(_hostR, _rightPort, object);
     }
   }
 
