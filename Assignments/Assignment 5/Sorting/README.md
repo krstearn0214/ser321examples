@@ -59,6 +59,26 @@ The cause of these rapid increases in time and data is twofold.  First, the sort
 
 2.  Attempted to connect distribution - was not able to figure out that ServerSocket within Node.java needed to be changed to Socket to accomidate nonlocal hosts.  Code submitted as-is.
 EDIT:
-Gradle tasks:
-gradle runBranch --args="localhost 8888 localhost 8889 8000"
-gradle runSorter --args="8888"
+3.  Was not able to have secondary local system accept socket requests, through AWS or VM.  VM did respond to pings of average 70ms response time, and the Branch remove() method sends 3 NetworkUtils.send() requests each call.  Each send() request ends in a return, giving 6 transmits over network per remove() call.  The amount of bytes would remain unchanged.  Thus, the following is extrapolated:
+
+The results are as follows:
+1000 piece array of int's randomized from 1-999
+
+One sorter - Elapsed time 1511 + **0** ms, 787255 bytes networked
+One branch, two sorter - 3406 + **4200** = 7606 ms, 3071651 bytes
+3 branch 4 sort - not programmed
+
+5000 piece array
+0-1 4545 + **0** ms, 3891827 bytes
+1-2 11707 + **21000** = 32707 ms, 15317947 bytes
+3-4 not programmed
+
+5.  The above would be for a local system.
+
+7.  See above.
+
+8.  A significant amount of time is lost by having each remove() call send three send() calls.  This is not efficient.  A live version of this sorting would split the list into equal parts, send as a JSON object, have each Sorter node merge sort while the branch was also merge sorting, then have the Branch node insertion sort the returned presorted objects.  
+
+**Task 3**
+
+1.  
