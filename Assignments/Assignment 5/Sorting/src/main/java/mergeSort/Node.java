@@ -30,12 +30,14 @@ public abstract class Node implements Runnable {
     try {
       // create the listening socket
       socket = new ServerSocket(_port);
+      
       while (true) { // handle connections indefinitely
+        
         Socket conn = null;
+        System.out.println(conn.toString());
         try {
           // listen for connection
           conn = socket.accept();
-
           // read in a message
           JSONObject root = NetworkUtils.read(conn);
 

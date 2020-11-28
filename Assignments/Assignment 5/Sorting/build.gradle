@@ -22,3 +22,23 @@ task Starter(type: JavaExec) {
   main = 'mergeSort.MergeSort'
   standardInput = System.in
 }
+
+task runSorter(type: JavaExec){
+  group 'simple'
+  description 'Base sample'
+
+  classpath = sourceSets.main.runtimeClasspath
+
+  main = 'mergeSort.MergeSort'
+  standardInput = System.in
+}
+
+task runBranch(type: JavaExec){
+  group 'simple'
+  description 'Base sample'
+
+  classpath = sourceSets.main.runtimeClasspath
+
+  main = 'mergeSort.MergeSort'
+  standardInput = System.in
+}
