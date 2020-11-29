@@ -1,5 +1,12 @@
-﻿Assignment 5 - Version 2
+﻿Assignment 5 - Version 2 - Kyle Stearns (krstearn)
 
+**Activity 1**
+There are two folders - Sorting for task 1/2 and Task3Sorting for task 3.
+Per assignment requirements, following are gradle tasks:
+gradle runSorter port
+gradle runBranch child1Host child1Port child2Host child2Port port (where port is
+the own port and the others are ips and ports from the children)
+Gradle commands should be ran within the Sorting or Task3Sorting folders.
 **Task 1**
 
 1.  
@@ -81,4 +88,10 @@ One branch, two sorter - 3406 + **4200** = 7606 ms, 3071651 bytes
 
 **Task 3**
 
-1.  
+1.  Potentional improvments include sending data as one package, sending all at once, using merge sort on each node, recieving from each node, and then using a sorted insertion sort to finalize the list.  
+2.  See above.  Changed to legit merge sort, had issues.  
+3.  It's valuable to use merge sort when items are unsorted; combining them with a sorted inserterion sort at the branch node allows for a low complexity solution for all three nodes individually.  
+NOTES: Program compiles, couldn't find the issue with package sending - the first object sent to the first node won't sort at all, second one will but is overridden if you try to sort the first one, etc.  Probably stems from bootstrapping multiple code sources into one program.  Wish there were about 40 more hours each week to do this right.
+
+**Activity 2** 
+Nope.
